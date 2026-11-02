@@ -113,7 +113,7 @@ export const seedDatabase = async () => {
       slug: 'web-development',
       description: 'Master frontend, backend, full stack frameworks, and modern web architectures.',
       icon: 'Code',
-      courseCount: 2,
+      courseCount: 4,
     });
 
     const catAI = await Category.create({
@@ -121,7 +121,7 @@ export const seedDatabase = async () => {
       slug: 'data-science-ai',
       description: 'Explore neural networks, machine learning models, Python analytics, and deep learning.',
       icon: 'Brain',
-      courseCount: 1,
+      courseCount: 3,
     });
 
     const catCloud = await Category.create({
@@ -129,7 +129,7 @@ export const seedDatabase = async () => {
       slug: 'cloud-devops',
       description: 'Continuous integration, containerization with Docker, Kubernetes, and AWS architecture.',
       icon: 'Cloud',
-      courseCount: 1,
+      courseCount: 2,
     });
 
     const catCyber = await Category.create({
@@ -137,7 +137,7 @@ export const seedDatabase = async () => {
       slug: 'cybersecurity',
       description: 'Penetration testing, network defense, ethical hacking, and enterprise security policies.',
       icon: 'Shield',
-      courseCount: 0,
+      courseCount: 1,
     });
 
     const catUIUX = await Category.create({
@@ -145,7 +145,7 @@ export const seedDatabase = async () => {
       slug: 'ui-ux-design',
       description: 'Design systems, Figma wireframing, user psychology, and interactive prototyping.',
       icon: 'Layout',
-      courseCount: 0,
+      courseCount: 1,
     });
 
     const catMobile = await Category.create({
@@ -153,7 +153,7 @@ export const seedDatabase = async () => {
       slug: 'mobile-development',
       description: 'Build native iOS and Android apps using React Native, Flutter, and Swift.',
       icon: 'Smartphone',
-      courseCount: 0,
+      courseCount: 1,
     });
 
     console.log('[Seed Engine] Seeding Courses & Curricula...');
@@ -506,6 +506,495 @@ export const seedDatabase = async () => {
       isPreviewAllowed: false,
     });
 
+    // COURSE 5: Cybersecurity & Ethical Hacking: Defense in Depth (Paid)
+    const course5 = await Course.create({
+      title: 'Cybersecurity & Ethical Hacking: Defense in Depth',
+      slug: 'cybersecurity-ethical-hacking-defense',
+      subtitle: 'Master network penetration testing, web app vulnerabilities (OWASP Top 10), and cryptography.',
+      description: 'Protect enterprise infrastructure against modern threat actors. Learn real vulnerability assessments, network sniffing with Wireshark, SQL injection mitigation, cross-site request forgery defense, and automated security scanning tools.',
+      instructor: instructor1._id,
+      category: catCyber._id,
+      difficulty: 'intermediate',
+      language: 'English',
+      price: 2199,
+      isFree: false,
+      discountPrice: 1699,
+      thumbnail: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&auto=format&fit=crop&q=80',
+      trailerVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+      objectives: [
+        'Identify and exploit OWASP Top 10 vulnerabilities in lab environments',
+        'Analyze network packets using Wireshark and tcpdump',
+        'Implement cryptographic authentication and zero-trust perimeter defenses',
+      ],
+      requirements: ['Basic networking knowledge (TCP/IP, DNS) and command line familiarity'],
+      targetAudience: ['Security analysts, system administrators, and developers building secure systems'],
+      status: 'published',
+      totalLessons: 3,
+      totalDurationMinutes: 45,
+      ratingAverage: 4.9,
+      ratingCount: 48,
+      enrolledCount: 310,
+    });
+
+    const sec5_1 = await Section.create({
+      course: course5._id,
+      title: 'Section 1: Security Mindset & Network Defense',
+      orderIndex: 0,
+    });
+
+    await Lesson.create({
+      course: course5._id,
+      section: sec5_1._id,
+      title: 'The Zero-Trust Architecture Paradigm',
+      description: 'Never trust, always verify: implementing continuous verification across microservices.',
+      orderIndex: 0,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4',
+      videoDurationSeconds: 780,
+      isPreviewAllowed: true,
+    });
+
+    await Lesson.create({
+      course: course5._id,
+      section: sec5_1._id,
+      title: 'OWASP Top 10: Deep Dive into SQLi & XSS',
+      description: 'Hands-on breakdown of injection attack vectors and parameter sanitization.',
+      orderIndex: 1,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+      videoDurationSeconds: 1020,
+      isPreviewAllowed: false,
+    });
+
+    await Lesson.create({
+      course: course5._id,
+      section: sec5_1._id,
+      title: 'Implementing Strict Content Security Policies (CSP)',
+      description: 'Mitigating script execution risks with modern HTTP security headers.',
+      orderIndex: 2,
+      type: 'article',
+      contentBody: `### Content Security Policy (CSP) Engineering\n\nA Content Security Policy is an effective defense against Cross-Site Scripting (XSS) and data injection attacks.\n\n#### Key Directives:\n- \`default-src 'self'\`: Only allow resources from the origin domain by default.\n- \`script-src 'self' 'nonce-...' \`: Disallow arbitrary inline scripts unless accompanied by a cryptographically generated nonce.\n- \`frame-ancestors 'none'\`: Prevent Clickjacking attacks by forbidding iframe embedding.\n\nUse Helmet in Express.js to enforce these headers at the boundary.`,
+      isPreviewAllowed: false,
+    });
+
+    // COURSE 6: Next.js 14 & Server Components Enterprise Architecture (Paid)
+    const course6 = await Course.create({
+      title: 'Next.js 14 & Server Components Enterprise Architecture',
+      slug: 'nextjs-14-server-components-architecture',
+      subtitle: 'Build enterprise-scale full stack web applications with the React App Router, Server Actions, and SSR.',
+      description: 'Master the bleeding edge of React and Next.js. Learn Streaming SSR, React Server Components (RSC), optimistic UI updates with Server Actions, dynamic caching strategies, and edge runtime deployment.',
+      instructor: instructor1._id,
+      category: catWeb._id,
+      difficulty: 'advanced',
+      language: 'English',
+      price: 2499,
+      isFree: false,
+      discountPrice: 1999,
+      thumbnail: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80',
+      trailerVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+      objectives: [
+        'Architect applications with React Server Components and Client Components boundaries',
+        'Implement type-safe Server Actions with Zod validation',
+        'Optimize Core Web Vitals using Next.js Image, Font, and streaming suspensions',
+      ],
+      requirements: ['Solid experience with React (hooks, context) and modern JavaScript'],
+      targetAudience: ['Senior frontend engineers and full stack architects transitioning to Next.js'],
+      status: 'published',
+      totalLessons: 2,
+      totalDurationMinutes: 36,
+      ratingAverage: 5.0,
+      ratingCount: 64,
+      enrolledCount: 420,
+    });
+
+    const sec6_1 = await Section.create({
+      course: course6._id,
+      title: 'Section 1: App Router & Server Components',
+      orderIndex: 0,
+    });
+
+    await Lesson.create({
+      course: course6._id,
+      section: sec6_1._id,
+      title: 'Understanding React Server Component Boundaries',
+      description: 'How RSC renders zero-bundle-size components on the server and streams HTML to the client.',
+      orderIndex: 0,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4',
+      videoDurationSeconds: 1140,
+      isPreviewAllowed: true,
+    });
+
+    await Lesson.create({
+      course: course6._id,
+      section: sec6_1._id,
+      title: 'Server Actions for Mutations with Optimistic Updates',
+      description: 'Eliminating boilerplate REST controllers using type-safe Next.js Server Actions.',
+      orderIndex: 1,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4',
+      videoDurationSeconds: 1020,
+      isPreviewAllowed: false,
+    });
+
+    // COURSE 7: Figma Design Systems & Modern UI/UX Masterclass (Paid)
+    const course7 = await Course.create({
+      title: 'Figma Design Systems & Modern UI/UX Masterclass',
+      slug: 'figma-design-systems-ui-ux-masterclass',
+      subtitle: 'From wireframes to production-grade design systems: auto-layout, variables, and developer handoff.',
+      description: 'Bridge the gap between design and engineering. Create high-fidelity design systems with design tokens, component variants, responsive auto-layout, prototype interactions, and accessibility-compliant color contrast.',
+      instructor: instructor2._id,
+      category: catUIUX._id,
+      difficulty: 'beginner',
+      language: 'English',
+      price: 1499,
+      isFree: false,
+      discountPrice: 999,
+      thumbnail: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=800&auto=format&fit=crop&q=80',
+      trailerVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
+      objectives: [
+        'Build scalable design systems in Figma with variables and component properties',
+        'Master nested Auto-Layout to reflect real CSS Flexbox behavior',
+        'Generate design tokens for direct handoff to frontend engineers',
+      ],
+      requirements: ['No prior design experience needed - Figma free account recommended'],
+      targetAudience: ['UI/UX designers, product designers, and frontend developers wanting design skills'],
+      status: 'published',
+      totalLessons: 2,
+      totalDurationMinutes: 32,
+      ratingAverage: 4.8,
+      ratingCount: 37,
+      enrolledCount: 215,
+    });
+
+    const sec7_1 = await Section.create({
+      course: course7._id,
+      title: 'Section 1: Component Architecture & Auto-Layout',
+      orderIndex: 0,
+    });
+
+    await Lesson.create({
+      course: course7._id,
+      section: sec7_1._id,
+      title: 'Figma Auto-Layout 5.0: The Complete Workflow',
+      description: 'Mastering flex wrapping, gap management, and responsive resizing constraints.',
+      orderIndex: 0,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      videoDurationSeconds: 960,
+      isPreviewAllowed: true,
+    });
+
+    await Lesson.create({
+      course: course7._id,
+      section: sec7_1._id,
+      title: 'Design Tokens & Multi-Brand Theme Variables',
+      description: 'Setting up color tokens, spacing scales, and typography styles that match code.',
+      orderIndex: 1,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+      videoDurationSeconds: 960,
+      isPreviewAllowed: false,
+    });
+
+    // COURSE 8: React Native & Expo: Cross-Platform iOS & Android Apps (Paid)
+    const course8 = await Course.create({
+      title: 'React Native & Expo: Cross-Platform Mobile Apps',
+      slug: 'react-native-expo-cross-platform-apps',
+      subtitle: 'Build native iOS and Android apps with a single React codebase, Expo Router, and camera APIs.',
+      description: 'Harness the power of React Native with modern Expo SDK. Build fluid mobile interfaces, implement offline-first persistence with SQLite, integrate native push notifications, and publish to the Apple App Store and Google Play Store.',
+      instructor: instructor1._id,
+      category: catMobile._id,
+      difficulty: 'intermediate',
+      language: 'English',
+      price: 1999,
+      isFree: false,
+      discountPrice: 1599,
+      thumbnail: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&auto=format&fit=crop&q=80',
+      trailerVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+      objectives: [
+        'Build production-ready mobile apps using React Native and Expo',
+        'Implement file-based navigation with Expo Router v3',
+        'Handle device hardware APIs (Camera, Location, Secure Storage)',
+      ],
+      requirements: ['Basic proficiency with React and JavaScript ES6+'],
+      targetAudience: ['Web developers transitioning to native mobile engineering'],
+      status: 'published',
+      totalLessons: 2,
+      totalDurationMinutes: 34,
+      ratingAverage: 4.9,
+      ratingCount: 29,
+      enrolledCount: 180,
+    });
+
+    const sec8_1 = await Section.create({
+      course: course8._id,
+      title: 'Section 1: Native Mobile Fundamentals',
+      orderIndex: 0,
+    });
+
+    await Lesson.create({
+      course: course8._id,
+      section: sec8_1._id,
+      title: 'Expo Workflow Setup & Native Bridge Concepts',
+      description: 'How the React Native bridge and new TurboModules communicate with native Swift/Kotlin.',
+      orderIndex: 0,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4',
+      videoDurationSeconds: 1040,
+      isPreviewAllowed: true,
+    });
+
+    await Lesson.create({
+      course: course8._id,
+      section: sec8_1._id,
+      title: 'File-based Routing with Expo Router',
+      description: 'Tabs, stacks, and nested modal screens made intuitive with filesystem routing.',
+      orderIndex: 1,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+      videoDurationSeconds: 1000,
+      isPreviewAllowed: false,
+    });
+
+    // COURSE 9: Generative AI & LLM Application Engineering (Paid)
+    const course9 = await Course.create({
+      title: 'Generative AI & LLM Engineering with LangChain',
+      slug: 'generative-ai-llm-engineering-langchain',
+      subtitle: 'Build production AI agents, Retrieval-Augmented Generation (RAG) systems, and vector search apps.',
+      description: 'Go beyond basic chat prompts into autonomous AI software. Implement document ingestion pipelines with chunking and embeddings, query vector databases like ChromaDB and Pinecone, handle conversational memory, and deploy function-calling agents.',
+      instructor: instructor2._id,
+      category: catAI._id,
+      difficulty: 'advanced',
+      language: 'English',
+      price: 2799,
+      isFree: false,
+      discountPrice: 2299,
+      thumbnail: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop&q=80',
+      trailerVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+      objectives: [
+        'Build scalable Retrieval Augmented Generation (RAG) pipelines',
+        'Store and retrieve semantic embeddings in vector databases',
+        'Implement autonomous AI agent loops with tool usage and memory',
+      ],
+      requirements: ['Python 3.10+ proficiency and familiarity with REST APIs'],
+      targetAudience: ['Data scientists, software engineers, and AI builders aiming for production LLMs'],
+      status: 'published',
+      totalLessons: 2,
+      totalDurationMinutes: 40,
+      ratingAverage: 5.0,
+      ratingCount: 52,
+      enrolledCount: 390,
+    });
+
+    const sec9_1 = await Section.create({
+      course: course9._id,
+      title: 'Section 1: Semantic Search & Vector Embeddings',
+      orderIndex: 0,
+    });
+
+    await Lesson.create({
+      course: course9._id,
+      section: sec9_1._id,
+      title: 'Vector Embeddings & Cosine Similarity Intuition',
+      description: 'How high-dimensional vectors capture semantic meaning and enable instant context search.',
+      orderIndex: 0,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4',
+      videoDurationSeconds: 1200,
+      isPreviewAllowed: true,
+    });
+
+    await Lesson.create({
+      course: course9._id,
+      section: sec9_1._id,
+      title: 'Building a Production RAG Pipeline with LangChain',
+      description: 'Recursive character chunking, metadata filtering, and hallucination reduction strategies.',
+      orderIndex: 1,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+      videoDurationSeconds: 1200,
+      isPreviewAllowed: false,
+    });
+
+    // COURSE 10: Python for Data Analysis & Statistical Modeling (FREE)
+    const course10 = await Course.create({
+      title: 'Python for Data Analysis & Statistical Modeling',
+      slug: 'python-data-analysis-statistical-modeling',
+      subtitle: 'Analyze datasets, automate spreadsheets, and build visual dashboards with Pandas, NumPy, and Seaborn.',
+      description: 'Start your journey in data science with Python. Clean messy data, aggregate metrics across millions of rows, compute statistical significance, and build publication-grade visualizations.',
+      instructor: instructor2._id,
+      category: catAI._id,
+      difficulty: 'beginner',
+      language: 'English',
+      price: 0,
+      isFree: true,
+      thumbnail: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80',
+      trailerVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+      objectives: [
+        'Clean, transform, and merge multi-table datasets using Pandas DataFrames',
+        'Perform array calculations and vectorized mathematical operations with NumPy',
+        'Create statistical distribution plots and correlation heatmaps with Seaborn',
+      ],
+      requirements: ['Basic computer literacy. No programming experience required.'],
+      targetAudience: ['Aspiring data analysts, business intelligence professionals, and researchers'],
+      status: 'published',
+      totalLessons: 2,
+      totalDurationMinutes: 30,
+      ratingAverage: 4.7,
+      ratingCount: 85,
+      enrolledCount: 610,
+    });
+
+    const sec10_1 = await Section.create({
+      course: course10._id,
+      title: 'Section 1: Data Wrangling with Pandas',
+      orderIndex: 0,
+    });
+
+    await Lesson.create({
+      course: course10._id,
+      section: sec10_1._id,
+      title: 'DataFrames, Series, and Indexing Essentials',
+      description: 'Selecting columns, filtering rows with boolean indexing, and handling null values.',
+      orderIndex: 0,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4',
+      videoDurationSeconds: 900,
+      isPreviewAllowed: true,
+    });
+
+    await Lesson.create({
+      course: course10._id,
+      section: sec10_1._id,
+      title: 'Visualizing Trends with Matplotlib & Seaborn',
+      description: 'Creating high-impact line charts, bar plots, and density estimates for stakeholder reporting.',
+      orderIndex: 1,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4',
+      videoDurationSeconds: 900,
+      isPreviewAllowed: true,
+    });
+
+    // COURSE 11: AWS Solutions Architect Associate Bootcamp (Paid)
+    const course11 = await Course.create({
+      title: 'AWS Solutions Architect Associate Certification Bootcamp',
+      slug: 'aws-solutions-architect-bootcamp',
+      subtitle: 'Comprehensive preparation for SAA-C03: EC2, VPC, S3, IAM, DynamoDB, RDS, and CloudFront.',
+      description: 'Pass the AWS Solutions Architect Associate exam with confidence. Master core AWS architectural design patterns: high availability, multi-region fault tolerance, decoupled serverless microservices, and cost optimization.',
+      instructor: instructor2._id,
+      category: catCloud._id,
+      difficulty: 'intermediate',
+      language: 'English',
+      price: 2299,
+      isFree: false,
+      discountPrice: 1799,
+      thumbnail: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&auto=format&fit=crop&q=80',
+      trailerVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
+      objectives: [
+        'Design resilient, highly available multi-AZ cloud infrastructures on AWS',
+        'Configure custom VPC subnets, route tables, and NAT Gateways',
+        'Implement IAM security policies and least-privilege access rules',
+      ],
+      requirements: ['Basic understanding of operating systems and networking fundamentals'],
+      targetAudience: ['Cloud engineers, DevOps practitioners, and systems administrators'],
+      status: 'published',
+      totalLessons: 2,
+      totalDurationMinutes: 35,
+      ratingAverage: 4.8,
+      ratingCount: 43,
+      enrolledCount: 340,
+    });
+
+    const sec11_1 = await Section.create({
+      course: course11._id,
+      title: 'Section 1: Core Compute & Networking',
+      orderIndex: 0,
+    });
+
+    await Lesson.create({
+      course: course11._id,
+      section: sec11_1._id,
+      title: 'VPC Design: Public Subnets, Private Subnets & CIDR Blocks',
+      description: 'Architecting secure isolated virtual networks and configuring internet gateway routing.',
+      orderIndex: 0,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      videoDurationSeconds: 1050,
+      isPreviewAllowed: true,
+    });
+
+    await Lesson.create({
+      course: course11._id,
+      section: sec11_1._id,
+      title: 'Auto Scaling Groups & Elastic Load Balancing (ALB)',
+      description: 'Distributing incoming web traffic across healthy EC2 targets and scaling on CPU thresholds.',
+      orderIndex: 1,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+      videoDurationSeconds: 1050,
+      isPreviewAllowed: false,
+    });
+
+    // COURSE 12: TypeScript from Scratch: Production Type Systems (FREE)
+    const course12 = await Course.create({
+      title: 'TypeScript from Scratch: Production Type Systems',
+      slug: 'typescript-production-type-systems',
+      subtitle: 'Eliminate runtime JavaScript bugs: Generics, Union types, narrowing, and type-level programming.',
+      description: 'Supercharge your JavaScript development with strict typing. Learn why top engineering teams standardize on TypeScript. Master generic functions, branded types, keyof lookups, utility types (Partial, Pick, Omit), and schema typing with Zod.',
+      instructor: instructor1._id,
+      category: catWeb._id,
+      difficulty: 'beginner',
+      language: 'English',
+      price: 0,
+      isFree: true,
+      thumbnail: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&auto=format&fit=crop&q=80',
+      trailerVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+      objectives: [
+        'Write clean, strictly typed TypeScript code that catches errors at compile time',
+        'Create reusable generic components, interfaces, and function signatures',
+        'Integrate TypeScript seamlessly with React components and Express REST APIs',
+      ],
+      requirements: ['Familiarity with standard JavaScript (ES6 syntax)'],
+      targetAudience: ['Frontend, backend, and full-stack developers transitioning to TypeScript'],
+      status: 'published',
+      totalLessons: 2,
+      totalDurationMinutes: 28,
+      ratingAverage: 4.9,
+      ratingCount: 98,
+      enrolledCount: 750,
+    });
+
+    const sec12_1 = await Section.create({
+      course: course12._id,
+      title: 'Section 1: The TypeScript Type Engine',
+      orderIndex: 0,
+    });
+
+    await Lesson.create({
+      course: course12._id,
+      section: sec12_1._id,
+      title: 'Type Inference, Union Types & Exhaustive Narrowing',
+      description: 'Understanding type guards, discriminated unions, and never-type exhaustive checking.',
+      orderIndex: 0,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4',
+      videoDurationSeconds: 840,
+      isPreviewAllowed: true,
+    });
+
+    await Lesson.create({
+      course: course12._id,
+      section: sec12_1._id,
+      title: 'Generics & Advanced Utility Types Deep Dive',
+      description: 'Building type-safe abstractions with Generic T, Pick, Record, and ReturnType.',
+      orderIndex: 1,
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+      videoDurationSeconds: 840,
+      isPreviewAllowed: true,
+    });
+
     console.log('[Seed Engine] Seeding Enrollments & Learning Progress for Liam...');
     // Enroll Liam in Course 1 (Paid) and Course 2 (Free)
     const payment1 = await Payment.create({
@@ -599,6 +1088,46 @@ export const seedDatabase = async () => {
       student: student2._id,
       rating: 5,
       comment: 'Incredible beginner-friendly introduction to Tailwind CSS! Transformed how I style my modern web components.',
+      isApproved: true,
+    });
+
+    await Review.create({
+      course: course5._id,
+      student: student3._id,
+      rating: 5,
+      comment: 'The OWASP Top 10 breakdown and hands-on CSP implementations are gold for anyone building enterprise web apps!',
+      isApproved: true,
+    });
+
+    await Review.create({
+      course: course6._id,
+      student: student1._id,
+      rating: 5,
+      comment: 'Best explanation of Server Components and Server Actions I have seen. Made our team architecture seamless.',
+      isApproved: true,
+    });
+
+    await Review.create({
+      course: course7._id,
+      student: student2._id,
+      rating: 5,
+      comment: 'Sophia makes Figma variables and auto-layout feel so natural. My handoff to devs has never been smoother.',
+      isApproved: true,
+    });
+
+    await Review.create({
+      course: course9._id,
+      student: student1._id,
+      rating: 5,
+      comment: 'The RAG pipeline breakdown with LangChain and vector databases was comprehensive and production-ready.',
+      isApproved: true,
+    });
+
+    await Review.create({
+      course: course12._id,
+      student: student3._id,
+      rating: 5,
+      comment: 'Finally understood TypeScript generics and utility types. Highly recommended for every JavaScript developer.',
       isApproved: true,
     });
 
