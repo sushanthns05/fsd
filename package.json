@@ -1,0 +1,31 @@
+{
+  "name": "edusphere-platform",
+  "version": "1.0.0",
+  "description": "EduSphere — Smart Online Learning Platform (Enterprise MERN Stack)",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:dev": "npm --prefix server run dev",
+    "client:dev": "npm --prefix client run dev",
+    "seed": "npm --prefix server run seed",
+    "build": "npm --prefix client run build",
+    "test": "npm --prefix server test && npm --prefix client test",
+    "test:server": "npm --prefix server test",
+    "test:client": "npm --prefix client test",
+    "test:e2e": "npx playwright test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "keywords": [
+    "edtech",
+    "e-learning",
+    "mern",
+    "react",
+    "express",
+    "mongodb",
+    "lms"
+  ],
+  "author": "EduSphere Core Engineering Team",
+  "license": "MIT"
+}
