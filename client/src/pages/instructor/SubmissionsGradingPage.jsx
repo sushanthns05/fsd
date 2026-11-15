@@ -201,7 +201,18 @@ export const SubmissionsGradingPage = () => {
               <div className="flex items-center gap-4 self-end sm:self-center">
                 <div className="text-right">
                   <Badge variant={sub.status === 'graded' ? 'success' : 'primary'} size="xs">
-                    {sub.status === 'graded' ? `Graded: ${sub.marksAwarded} marks` : 'Pending Grade'}
+                    {sub.status === 'graded' ? (() => {
+                      const m = sub.marksAwarded || 0;
+                      let l = 'F'; let gp = 0.0;
+                      if (m >= 95) { l = 'A+'; gp = 4.0; }
+                      else if (m >= 90) { l = 'A'; gp = 4.0; }
+                      else if (m >= 85) { l = 'A-'; gp = 3.7; }
+                      else if (m >= 80) { l = 'B+'; gp = 3.3; }
+                      else if (m >= 75) { l = 'B'; gp = 3.0; }
+                      else if (m >= 70) { l = 'B-'; gp = 2.7; }
+                      else if (m >= 60) { l = 'C'; gp = 2.0; }
+                      return `${sub.marksAwarded}/100 • Grade ${l} (${gp.toFixed(1)} GP)`;
+                    })() : 'Pending Grade'}
                   </Badge>
                   <p className="text-[10px] text-slate-400 mt-1">
                     Submitted: {new Date(sub.submittedAt).toLocaleDateString()}
@@ -234,11 +245,33 @@ export const SubmissionsGradingPage = () => {
         >
           <form onSubmit={handleGrade} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold mb-1">Marks Awarded</label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Marks Awarded (out of 100)
+                </label>
+                {(() => {
+                  const m = Number(marksAwarded) || 0;
+                  let grade = 'F';
+                  let gp = 0.0;
+                  if (m >= 95) { grade = 'A+'; gp = 4.0; }
+                  else if (m >= 90) { grade = 'A'; gp = 4.0; }
+                  else if (m >= 85) { grade = 'A-'; gp = 3.7; }
+                  else if (m >= 80) { grade = 'B+'; gp = 3.3; }
+                  else if (m >= 75) { grade = 'B'; gp = 3.0; }
+                  else if (m >= 70) { grade = 'B-'; gp = 2.7; }
+                  else if (m >= 60) { grade = 'C'; gp = 2.0; }
+                  return (
+                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                      Grade {grade} • {gp.toFixed(1)} GP
+                    </span>
+                  );
+                })()}
+              </div>
               <input
                 type="number"
                 required
                 min="0"
+                max="100"
                 value={marksAwarded}
                 onChange={(e) => setMarksAwarded(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-bold"

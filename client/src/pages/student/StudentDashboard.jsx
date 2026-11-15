@@ -9,6 +9,7 @@ import {
   ArrowRight,
   TrendingUp,
   Sparkles,
+  GraduationCap,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -37,17 +38,20 @@ export const StudentDashboard = () => {
   const { user } = useAuth();
   const [courses, setCourses] = useState([]);
   const [certificates, setCertificates] = useState([]);
+  const [gradeData, setGradeData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [courseRes, certRes] = await Promise.all([
+        const [courseRes, certRes, gradeRes] = await Promise.all([
           api.get('/enrollments/my-courses'),
           api.get('/certificates/my-certificates'),
+          api.get('/assignments/my/grades').catch(() => ({ data: null })),
         ]);
         if (courseRes.data?.success) setCourses(courseRes.data.courses || []);
         if (certRes.data?.success) setCertificates(certRes.data.certificates || []);
+        if (gradeRes?.data?.success) setGradeData(gradeRes.data);
       } catch (err) {
         console.error('Failed to load student dashboard', err);
       } finally {
@@ -81,7 +85,7 @@ export const StudentDashboard = () => {
       </div>
 
       {/* KPI Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
         <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-1">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
             <span className="text-xs font-semibold">Enrolled Courses</span>
@@ -112,6 +116,23 @@ export const StudentDashboard = () => {
             <Award className="w-4 h-4 text-purple-500" />
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white">{certificates.length}</p>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+            <span className="text-xs font-semibold">Cumulative GPA</span>
+            <GraduationCap className="w-4 h-4 text-blue-500" />
+          </div>
+          <div className="flex items-baseline gap-2">
+            <p className="text-2xl font-black text-slate-900 dark:text-white">
+              {gradeData?.stats?.cumulativeGPA !== undefined ? `${gradeData.stats.cumulativeGPA.toFixed(2)}` : '4.00'}
+            </p>
+            {gradeData?.stats?.overallGrade && (
+              <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
+                {gradeData.stats.overallGrade}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
@@ -304,6 +325,84 @@ export const StudentDashboard = () => {
                   >
                     Continue
                   </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Academic Grade Points & Project Evaluations */}
+      <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block mb-0.5">
+              Accredited Evaluations
+            </span>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+              Grade Points & Capstone Evaluations
+            </h3>
+          </div>
+          <Link
+            to="/student/assignments"
+            className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
+          >
+            <span>All Assignments</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {!gradeData?.grades || gradeData.grades.length === 0 ? (
+          <div className="p-8 text-center rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-dashed border-slate-200 dark:border-slate-700">
+            <p className="text-xs text-slate-500">
+              No graded assignments yet. Submit course capstone projects to accumulate grade points.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {gradeData.grades.map((grade) => (
+              <div
+                key={grade._id}
+                className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-3 transition-all hover:border-indigo-200 dark:hover:border-indigo-900"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={grade.courseThumbnail}
+                      alt={grade.courseTitle}
+                      className="w-12 h-12 rounded-xl object-cover shrink-0"
+                    />
+                    <div>
+                      <span className="text-[10px] font-semibold text-slate-400 line-clamp-1">
+                        {grade.courseTitle}
+                      </span>
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
+                        {grade.assignmentTitle}
+                      </h4>
+                    </div>
+                  </div>
+
+                  <div className="text-right shrink-0">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-extrabold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                      {grade.letterGrade} • {grade.gradePoints.toFixed(1)} GP
+                    </span>
+                    <p className="text-[11px] font-bold text-slate-600 dark:text-slate-400 mt-1">
+                      {grade.marksAwarded} / {grade.totalMarks} ({grade.percentage}%)
+                    </p>
+                  </div>
+                </div>
+
+                {grade.feedback && (
+                  <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 italic">
+                    "{grade.feedback}"
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                  <span>Instructor: {grade.gradedBy}</span>
+                  {grade.gradedAt && (
+                    <span>Evaluated {new Date(grade.gradedAt).toLocaleDateString()}</span>
+                  )}
                 </div>
               </div>
             ))}

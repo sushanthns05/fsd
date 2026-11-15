@@ -68,13 +68,22 @@ export const InstructorDashboard = () => {
           </p>
         </div>
 
-        <Link
-          to="/instructor/courses/create"
-          className="px-6 py-3.5 rounded-2xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2 shrink-0"
-        >
-          <PlusCircle className="w-4 h-4" />
-          <span>Create New Course</span>
-        </Link>
+        <div className="flex items-center gap-3 shrink-0">
+          <Link
+            to="/instructor/submissions"
+            className="px-5 py-3.5 rounded-2xl text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center gap-2"
+          >
+            <FileCheck2 className="w-4 h-4 text-emerald-400" />
+            <span>Review Submissions</span>
+          </Link>
+          <Link
+            to="/instructor/courses/create"
+            className="px-5 py-3.5 rounded-2xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2"
+          >
+            <PlusCircle className="w-4 h-4" />
+            <span>Create New Course</span>
+          </Link>
+        </div>
       </div>
 
       {/* KPI Cards */}

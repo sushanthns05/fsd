@@ -8,7 +8,9 @@ import {
   Lesson,
   Quiz,
   Question,
+  QuizAttempt,
   Assignment,
+  Submission,
   Enrollment,
   Progress,
   Review,
@@ -33,7 +35,9 @@ export const seedDatabase = async () => {
       Lesson.deleteMany({}),
       Quiz.deleteMany({}),
       Question.deleteMany({}),
+      QuizAttempt.deleteMany({}),
       Assignment.deleteMany({}),
+      Submission.deleteMany({}),
       Enrollment.deleteMany({}),
       Progress.deleteMany({}),
       Review.deleteMany({}),
@@ -260,7 +264,9 @@ export const seedDatabase = async () => {
       title: 'Mongoose Aggregation Pipelines for Dashboard Analytics',
       description: 'Building high-speed real-time metrics using MongoDB aggregation stages ($group, $match, $sort).',
       orderIndex: 1,
-      type: 'article',
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4',
+      videoDurationSeconds: 980,
       contentBody: `### Mastering MongoDB Aggregation Pipelines\n\nWhen calculating platform metrics such as total revenue, student growth, and lesson completion rates, doing multiple in-memory operations across thousands of documents is slow and inefficient.\n\nBy leveraging **MongoDB Aggregation Pipelines**, you shift the heavy lifting directly to the database engine.\n\n#### Key Aggregation Stages:\n1. **$match**: Filters documents to pass only matching criteria into subsequent stages.\n2. **$group**: Groups documents by an expression and computes accumulated values ($sum, $avg, $min, $max).\n3. **$sort**: Orders resulting documents with indexed speed.\n4. **$project**: Reshapes each document, adding computed fields or discarding unnecessary ones.\n\n\`\`\`javascript\nconst revenueStats = await Payment.aggregate([\n  { $match: { status: 'successful' } },\n  { $group: { _id: null, totalRevenue: { $sum: '$amount' }, count: { $sum: 1 } } }\n]);\n\`\`\`\n\nAlways ensure that the first stage in your pipeline utilizes existing compound indexes for maximum query throughput!`,
       isPreviewAllowed: false,
     });
@@ -309,7 +315,7 @@ export const seedDatabase = async () => {
     });
 
     // Assignment for Course 1
-    await Assignment.create({
+    const assign1 = await Assignment.create({
       course: course1._id,
       section: sec1_2._id,
       title: 'Capstone: Build a Protected REST Endpoint with JWT Verification',
@@ -391,9 +397,28 @@ export const seedDatabase = async () => {
       title: 'Building Dark Mode & Accessible Design Tokens',
       description: 'Implementing class-based dark mode switching and accessible color palettes.',
       orderIndex: 2,
-      type: 'article',
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+      videoDurationSeconds: 840,
       contentBody: `### Implementing Dark Mode in Modern Web Apps\n\nDark mode has evolved from a novelty feature into a vital accessibility consideration. Prolonged screen time causes eye strain, and high-contrast dark themes offer substantial relief in low-light environments.\n\nIn Tailwind CSS, enabling dark mode is straightforward:\n1. Configure \`darkMode: 'class'\` in your \`tailwind.config.js\`.\n2. Apply the \`dark:\` modifier to text and background classes.\n3. Store user theme preference in \`localStorage\` to persist settings across sessions.`,
       isPreviewAllowed: false,
+    });
+
+    const assign2 = await Assignment.create({
+      course: course2._id,
+      section: sec2_1._id,
+      title: 'Project: Responsive SaaS Dashboard & Accessible Dark Mode UI',
+      instructions: `### Assignment Objective\n\nBuild a production-quality responsive SaaS dashboard using Tailwind CSS.\n\n**Requirements:**\n1. Implement mobile, tablet, and desktop breakpoints using flexbox and grid.\n2. Configure a class-based dark mode toggle with smooth color transitions.\n3. Verify color contrast ratios to satisfy WCAG AA accessibility standards.`,
+      totalMarks: 100,
+      passingMarks: 60,
+      deadline: new Date(Date.now() + 18 * 24 * 60 * 60 * 1000),
+      referenceFiles: [
+        {
+          name: 'Dashboard-UI-Spec.pdf',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '350 KB',
+        },
+      ],
     });
 
     // COURSE 3: Applied Machine Learning & Neural Networks (Paid)
@@ -455,6 +480,23 @@ export const seedDatabase = async () => {
       isPreviewAllowed: false,
     });
 
+    const assign3 = await Assignment.create({
+      course: course3._id,
+      section: sec3_1._id,
+      title: 'Project: PyTorch Neural Network Training & REST Model Serving',
+      instructions: `### Assignment Objective\n\nTrain a deep learning model in PyTorch and deploy it for live inference.\n\n**Requirements:**\n1. Define custom PyTorch nn.Module architecture with Dropout and BatchNorm.\n2. Train with AdamW optimizer, tracking loss and accuracy metrics per epoch.\n3. Expose model predictions via a RESTful JSON endpoint with input validation.`,
+      totalMarks: 100,
+      passingMarks: 60,
+      deadline: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000),
+      referenceFiles: [
+        {
+          name: 'PyTorch-Starter-Dataset.zip',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '1.8 MB',
+        },
+      ],
+    });
+
     // COURSE 4: Cloud Engineering & Kubernetes Orchestration (Paid)
     const course4 = await Course.create({
       title: 'DevOps & Kubernetes Cloud Orchestration',
@@ -504,6 +546,23 @@ export const seedDatabase = async () => {
       videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
       videoDurationSeconds: 900,
       isPreviewAllowed: false,
+    });
+
+    const assign4 = await Assignment.create({
+      course: course4._id,
+      section: sec4_1._id,
+      title: 'Project: Multi-Stage Dockerization & Kubernetes Cluster Deployment',
+      instructions: `### Assignment Objective\n\nContainerize a production full-stack application and deploy it to a Kubernetes cluster.\n\n**Requirements:**\n1. Write a multi-stage Dockerfile using Alpine Linux that compiles under 50MB.\n2. Write Kubernetes YAML manifests for Deployment, ClusterIP Service, and Ingress.\n3. Implement liveness/readiness probes and rolling zero-downtime updates.`,
+      totalMarks: 100,
+      passingMarks: 60,
+      deadline: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000),
+      referenceFiles: [
+        {
+          name: 'K8s-Deployment-Manifests.zip',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '420 KB',
+        },
+      ],
     });
 
     // COURSE 5: Cybersecurity & Ethical Hacking: Defense in Depth (Paid)
@@ -572,9 +631,28 @@ export const seedDatabase = async () => {
       title: 'Implementing Strict Content Security Policies (CSP)',
       description: 'Mitigating script execution risks with modern HTTP security headers.',
       orderIndex: 2,
-      type: 'article',
+      type: 'video',
+      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+      videoDurationSeconds: 900,
       contentBody: `### Content Security Policy (CSP) Engineering\n\nA Content Security Policy is an effective defense against Cross-Site Scripting (XSS) and data injection attacks.\n\n#### Key Directives:\n- \`default-src 'self'\`: Only allow resources from the origin domain by default.\n- \`script-src 'self' 'nonce-...' \`: Disallow arbitrary inline scripts unless accompanied by a cryptographically generated nonce.\n- \`frame-ancestors 'none'\`: Prevent Clickjacking attacks by forbidding iframe embedding.\n\nUse Helmet in Express.js to enforce these headers at the boundary.`,
       isPreviewAllowed: false,
+    });
+
+    const assign5 = await Assignment.create({
+      course: course5._id,
+      section: sec5_1._id,
+      title: 'Project: Web Security Audit & OWASP Top 10 Hardening Blueprint',
+      instructions: `### Assignment Objective\n\nPerform a simulated penetration test against an enterprise web service.\n\n**Requirements:**\n1. Identify injection vectors (SQLi, Stored XSS) and document exploitation proofs.\n2. Implement parameterized SQL queries and strict Content Security Policies in Express.\n3. Submit a professional vulnerability assessment report with executive summary.`,
+      totalMarks: 100,
+      passingMarks: 60,
+      deadline: new Date(Date.now() + 16 * 24 * 60 * 60 * 1000),
+      referenceFiles: [
+        {
+          name: 'Security-Audit-Template.pdf',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '512 KB',
+        },
+      ],
     });
 
     // COURSE 6: Next.js 14 & Server Components Enterprise Architecture (Paid)
@@ -637,6 +715,23 @@ export const seedDatabase = async () => {
       isPreviewAllowed: false,
     });
 
+    const assign6 = await Assignment.create({
+      course: course6._id,
+      section: sec6_1._id,
+      title: 'Project: Full Stack Next.js 14 App with Server Actions & Streaming',
+      instructions: `### Assignment Objective\n\nBuild a modern web app with Next.js 14 App Router.\n\n**Requirements:**\n1. Structure routes with React Server Components and isolated Client boundary leaves.\n2. Use Server Actions for database mutations with optimistic UI rollbacks on error.\n3. Stream high-latency data blocks with Suspense skeletons for optimal Core Web Vitals.`,
+      totalMarks: 100,
+      passingMarks: 60,
+      deadline: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+      referenceFiles: [
+        {
+          name: 'Next14-Starter-Boilerplate.zip',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '800 KB',
+        },
+      ],
+    });
+
     // COURSE 7: Figma Design Systems & Modern UI/UX Masterclass (Paid)
     const course7 = await Course.create({
       title: 'Figma Design Systems & Modern UI/UX Masterclass',
@@ -695,6 +790,23 @@ export const seedDatabase = async () => {
       videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
       videoDurationSeconds: 960,
       isPreviewAllowed: false,
+    });
+
+    const assign7 = await Assignment.create({
+      course: course7._id,
+      section: sec7_1._id,
+      title: 'Project: Production Figma Design System with Variables & Auto-Layout',
+      instructions: `### Assignment Objective\n\nBuild an accessible, multi-brand design system in Figma.\n\n**Requirements:**\n1. Define design tokens for semantic colors, typography scales, and spacing.\n2. Build responsive card, button, and navigation components with nested auto-layout.\n3. Create component variants with interactive hover, active, and disabled states.`,
+      totalMarks: 100,
+      passingMarks: 60,
+      deadline: new Date(Date.now() + 19 * 24 * 60 * 60 * 1000),
+      referenceFiles: [
+        {
+          name: 'Design-System-Styleguide.pdf',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '640 KB',
+        },
+      ],
     });
 
     // COURSE 8: React Native & Expo: Cross-Platform iOS & Android Apps (Paid)
@@ -757,6 +869,23 @@ export const seedDatabase = async () => {
       isPreviewAllowed: false,
     });
 
+    const assign8 = await Assignment.create({
+      course: course8._id,
+      section: sec8_1._id,
+      title: 'Project: Native Mobile App with Expo Router & Hardware APIs',
+      instructions: `### Assignment Objective\n\nBuild a cross-platform mobile application using React Native and Expo Router v3.\n\n**Requirements:**\n1. Implement tab and modal navigation with filesystem routing.\n2. Access device Camera and Photo Library with permission checks.\n3. Cache offline user state securely using Expo SecureStore and SQLite.`,
+      totalMarks: 100,
+      passingMarks: 60,
+      deadline: new Date(Date.now() + 22 * 24 * 60 * 60 * 1000),
+      referenceFiles: [
+        {
+          name: 'Expo-Mobile-Starter.zip',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '1.2 MB',
+        },
+      ],
+    });
+
     // COURSE 9: Generative AI & LLM Application Engineering (Paid)
     const course9 = await Course.create({
       title: 'Generative AI & LLM Engineering with LangChain',
@@ -817,6 +946,23 @@ export const seedDatabase = async () => {
       isPreviewAllowed: false,
     });
 
+    const assign9 = await Assignment.create({
+      course: course9._id,
+      section: sec9_1._id,
+      title: 'Project: Production RAG System with Vector Search & Conversational Memory',
+      instructions: `### Assignment Objective\n\nArchitect and evaluate a Retrieval-Augmented Generation (RAG) system with LangChain.\n\n**Requirements:**\n1. Ingest PDF documentation and split into semantic chunks with overlap.\n2. Index vectors into ChromaDB using embeddings.\n3. Implement conversational retrieval chain with source attribution citations.`,
+      totalMarks: 100,
+      passingMarks: 60,
+      deadline: new Date(Date.now() + 17 * 24 * 60 * 60 * 1000),
+      referenceFiles: [
+        {
+          name: 'RAG-Ingestion-Dataset.zip',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '2.4 MB',
+        },
+      ],
+    });
+
     // COURSE 10: Python for Data Analysis & Statistical Modeling (FREE)
     const course10 = await Course.create({
       title: 'Python for Data Analysis & Statistical Modeling',
@@ -874,6 +1020,23 @@ export const seedDatabase = async () => {
       videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4',
       videoDurationSeconds: 900,
       isPreviewAllowed: true,
+    });
+
+    const assign10 = await Assignment.create({
+      course: course10._id,
+      section: sec10_1._id,
+      title: 'Project: Exploratory Data Analysis & Statistical Modeling in Python',
+      instructions: `### Assignment Objective\n\nPerform end-to-end data exploration, cleaning, and statistical analysis.\n\n**Requirements:**\n1. Clean nulls, format datetimes, and aggregate categorical variables in Pandas.\n2. Compute correlation matrices and statistical hypothesis p-values.\n3. Plot publication-grade multi-panel charts using Seaborn and Matplotlib.`,
+      totalMarks: 100,
+      passingMarks: 60,
+      deadline: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000),
+      referenceFiles: [
+        {
+          name: 'Global-Sales-Clean.csv',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '750 KB',
+        },
+      ],
     });
 
     // COURSE 11: AWS Solutions Architect Associate Bootcamp (Paid)
@@ -936,6 +1099,23 @@ export const seedDatabase = async () => {
       isPreviewAllowed: false,
     });
 
+    const assign11 = await Assignment.create({
+      course: course11._id,
+      section: sec11_1._id,
+      title: 'Project: High-Availability Multi-AZ AWS Infrastructure Design',
+      instructions: `### Assignment Objective\n\nDesign and deploy an enterprise multi-tier AWS infrastructure.\n\n**Requirements:**\n1. Configure custom VPC across 2 Availability Zones with public/private subnets and NAT gateways.\n2. Setup Application Load Balancer with SSL termination and target groups.\n3. Implement Auto Scaling Groups with dynamic CPU utilization scaling policies.`,
+      totalMarks: 100,
+      passingMarks: 60,
+      deadline: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000),
+      referenceFiles: [
+        {
+          name: 'AWS-Architecture-Blueprint.pdf',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '980 KB',
+        },
+      ],
+    });
+
     // COURSE 12: TypeScript from Scratch: Production Type Systems (FREE)
     const course12 = await Course.create({
       title: 'TypeScript from Scratch: Production Type Systems',
@@ -995,8 +1175,28 @@ export const seedDatabase = async () => {
       isPreviewAllowed: true,
     });
 
-    console.log('[Seed Engine] Seeding Enrollments & Learning Progress for Liam...');
-    // Enroll Liam in Course 1 (Paid) and Course 2 (Free)
+    const assign12 = await Assignment.create({
+      course: course12._id,
+      section: sec12_1._id,
+      title: 'Project: Type-Safe Domain Architecture with TypeScript Generics & Zod',
+      instructions: `### Assignment Objective\n\nDesign a resilient, strictly-typed enterprise domain architecture in TypeScript.\n\n**Requirements:**\n1. Create generic entity repositories with CRUD type constraints.\n2. Use discriminated union types with exhaustive pattern matching switch statements.\n3. Infer runtime Zod schemas into compile-time TypeScript types without duplication.`,
+      totalMarks: 100,
+      passingMarks: 60,
+      deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+      referenceFiles: [
+        {
+          name: 'TS-Starter-Boilerplate.zip',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '310 KB',
+        },
+      ],
+    });
+
+    console.log('[Seed Engine] Seeding Enrollments, Submissions & Grade Points for Students...');
+
+    // -------------------------------------------------------------
+    // STUDENT 1: LIAM MILLER (Full Stack Specialist)
+    // -------------------------------------------------------------
     const payment1 = await Payment.create({
       user: student1._id,
       course: course1._id,
@@ -1009,18 +1209,8 @@ export const seedDatabase = async () => {
       method: 'upi',
     });
 
-    const enroll1 = await Enrollment.create({
-      student: student1._id,
-      course: course1._id,
-      status: 'completed',
-      pricePaid: 1999,
-      payment: payment1._id,
-      completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-    });
-
-    // Complete all 4 lessons of Course 1 for Liam
     const certId1 = generateCertificateId();
-    const certPdfUrl = await generateCertificatePDF({
+    const certPdfUrl1 = await generateCertificatePDF({
       certificateId: certId1,
       studentName: student1.name,
       courseTitle: course1.title,
@@ -1037,9 +1227,19 @@ export const seedDatabase = async () => {
       courseTitle: course1.title,
       instructorName: instructor1.name,
       verificationUrl: `${config.clientUrl}/verify/${certId1}`,
-      pdfUrl: certPdfUrl,
+      pdfUrl: certPdfUrl1,
       issueDate: new Date(),
       gradePercentage: 100,
+    });
+
+    // Course 1 (MERN)
+    await Enrollment.create({
+      student: student1._id,
+      course: course1._id,
+      status: 'completed',
+      pricePaid: 1999,
+      payment: payment1._id,
+      completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
     });
 
     await Progress.create({
@@ -1050,28 +1250,433 @@ export const seedDatabase = async () => {
         { lesson: lesson1_1._id, lastPositionSeconds: 720, completedAt: new Date() },
         { lesson: lesson1_2._id, lastPositionSeconds: 940, completedAt: new Date() },
         { lesson: lesson1_3._id, lastPositionSeconds: 1100, completedAt: new Date() },
-        { lesson: lesson1_4._id, lastPositionSeconds: 0, completedAt: new Date() },
+        { lesson: lesson1_4._id, lastPositionSeconds: 980, completedAt: new Date() },
       ],
       percentCompleted: 100,
       isCompleted: true,
       certificate: cert1._id,
     });
 
-    // Enroll Liam in Course 2 (Free) - in progress at 33%
+    await Submission.create({
+      assignment: assign1._id,
+      student: student1._id,
+      course: course1._id,
+      submissionFiles: [
+        {
+          name: 'liam_mern_auth_capstone.zip',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '2.1 MB',
+        },
+      ],
+      studentNotes: 'Implemented JWT token rotation in HTTP-only cookies, password hashing with bcrypt, and comprehensive Supertest suite.',
+      marksAwarded: 98,
+      status: 'graded',
+      feedback: 'Flawless JWT authentication implementation with secure HTTP-only cookie session handling. Clean modular middleware architecture and robust error boundary.',
+      gradedBy: instructor1._id,
+      gradedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    });
+
+    // Course 2 (Tailwind)
     await Enrollment.create({
       student: student1._id,
       course: course2._id,
-      status: 'active',
+      status: 'completed',
       pricePaid: 0,
+      completedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
     });
 
     await Progress.create({
       student: student1._id,
       course: course2._id,
-      completedLessons: [sec2_1._id], // completed 1 lesson
+      completedLessons: [sec2_1._id],
       lessonProgress: [],
-      percentCompleted: 33,
+      percentCompleted: 100,
+      isCompleted: true,
+    });
+
+    await Submission.create({
+      assignment: assign2._id,
+      student: student1._id,
+      course: course2._id,
+      submissionFiles: [
+        {
+          name: 'liam_tailwind_saas_dashboard.zip',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '1.4 MB',
+        },
+      ],
+      studentNotes: 'Built modern dashboard with responsive auto-wrapping grid and class-based dark mode toggle persisted in local storage.',
+      marksAwarded: 94,
+      status: 'graded',
+      feedback: 'Superb responsive layout utilizing Tailwind flex and grid utilities. Accessible color contrast ratios and smooth dark mode theme transitions.',
+      gradedBy: instructor1._id,
+      gradedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    });
+
+    // Course 6 (Next.js 14)
+    await Enrollment.create({
+      student: student1._id,
+      course: course6._id,
+      status: 'active',
+      pricePaid: 1999,
+    });
+
+    await Progress.create({
+      student: student1._id,
+      course: course6._id,
+      completedLessons: [sec6_1._id],
+      lessonProgress: [],
+      percentCompleted: 80,
       isCompleted: false,
+    });
+
+    await Submission.create({
+      assignment: assign6._id,
+      student: student1._id,
+      course: course6._id,
+      submissionFiles: [
+        {
+          name: 'liam_next14_server_actions.zip',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '3.2 MB',
+        },
+      ],
+      studentNotes: 'Implemented Next.js 14 App Router, streaming Suspense boundaries, and Zod validated Server Actions with optimistic rollbacks.',
+      marksAwarded: 91,
+      status: 'graded',
+      feedback: 'Great use of React Server Components and Server Actions. Mutation handling was clean and optimistic UI updates were responsive.',
+      gradedBy: instructor1._id,
+      gradedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    });
+
+    // Course 12 (TypeScript)
+    await Enrollment.create({
+      student: student1._id,
+      course: course12._id,
+      status: 'completed',
+      pricePaid: 0,
+      completedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+    });
+
+    await Progress.create({
+      student: student1._id,
+      course: course12._id,
+      completedLessons: [sec12_1._id],
+      lessonProgress: [],
+      percentCompleted: 100,
+      isCompleted: true,
+    });
+
+    await Submission.create({
+      assignment: assign12._id,
+      student: student1._id,
+      course: course12._id,
+      submissionFiles: [
+        {
+          name: 'liam_typescript_domain_models.zip',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '850 KB',
+        },
+      ],
+      studentNotes: 'Modeled complete e-commerce domain using generic repositories, discriminated unions, and Zod schema inference.',
+      marksAwarded: 96,
+      status: 'graded',
+      feedback: 'Brilliant type narrowing and generic constraints. Passed all strict compiler flags with zero any types.',
+      gradedBy: instructor1._id,
+      gradedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    });
+
+    // -------------------------------------------------------------
+    // STUDENT 2: AMINA PATEL (Data Science & AI Specialist)
+    // -------------------------------------------------------------
+    // Course 3 (Applied ML)
+    await Enrollment.create({
+      student: student2._id,
+      course: course3._id,
+      status: 'active',
+      pricePaid: 2499,
+    });
+
+    await Progress.create({
+      student: student2._id,
+      course: course3._id,
+      completedLessons: [sec3_1._id],
+      lessonProgress: [],
+      percentCompleted: 100,
+      isCompleted: true,
+    });
+
+    await Submission.create({
+      assignment: assign3._id,
+      student: student2._id,
+      course: course3._id,
+      submissionFiles: [
+        {
+          name: 'amina_pytorch_cnn_model.zip',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '4.5 MB',
+        },
+      ],
+      studentNotes: 'Trained PyTorch CNN on image classification benchmark with AdamW optimizer and deployed with FastAPI endpoint.',
+      marksAwarded: 95,
+      status: 'graded',
+      feedback: 'Superb PyTorch convolutional network design. Loss converged smoothly and inference latency is under 25ms.',
+      gradedBy: instructor2._id,
+      gradedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+    });
+
+    // Course 5 (Cybersecurity)
+    await Enrollment.create({
+      student: student2._id,
+      course: course5._id,
+      status: 'active',
+      pricePaid: 1699,
+    });
+
+    await Progress.create({
+      student: student2._id,
+      course: course5._id,
+      completedLessons: [sec5_1._id],
+      lessonProgress: [],
+      percentCompleted: 90,
+      isCompleted: false,
+    });
+
+    await Submission.create({
+      assignment: assign5._id,
+      student: student2._id,
+      course: course5._id,
+      submissionFiles: [
+        {
+          name: 'amina_security_audit_report.pdf',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '1.1 MB',
+        },
+      ],
+      studentNotes: 'Conducted automated and manual vulnerability assessment in isolated testbed. Implemented strict CSP and parameter sanitization.',
+      marksAwarded: 92,
+      status: 'graded',
+      feedback: 'Thorough penetration testing report covering OWASP Top 10 vulnerabilities with precise mitigation blueprints.',
+      gradedBy: instructor1._id,
+      gradedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    });
+
+    // Course 9 (Generative AI)
+    await Enrollment.create({
+      student: student2._id,
+      course: course9._id,
+      status: 'active',
+      pricePaid: 2299,
+    });
+
+    await Progress.create({
+      student: student2._id,
+      course: course9._id,
+      completedLessons: [sec9_1._id],
+      lessonProgress: [],
+      percentCompleted: 100,
+      isCompleted: true,
+    });
+
+    await Submission.create({
+      assignment: assign9._id,
+      student: student2._id,
+      course: course9._id,
+      submissionFiles: [
+        {
+          name: 'amina_langchain_rag_pipeline.zip',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '2.8 MB',
+        },
+      ],
+      studentNotes: 'Implemented recursive character text splitter, OpenAI embeddings in ChromaDB, and conversational retrieval chain.',
+      marksAwarded: 97,
+      status: 'graded',
+      feedback: 'Outstanding LangChain RAG pipeline with ChromaDB vector embeddings and context-aware chat memory.',
+      gradedBy: instructor2._id,
+      gradedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    });
+
+    // Course 10 (Python Data)
+    await Enrollment.create({
+      student: student2._id,
+      course: course10._id,
+      status: 'completed',
+      pricePaid: 0,
+      completedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+    });
+
+    await Progress.create({
+      student: student2._id,
+      course: course10._id,
+      completedLessons: [sec10_1._id],
+      lessonProgress: [],
+      percentCompleted: 100,
+      isCompleted: true,
+    });
+
+    await Submission.create({
+      assignment: assign10._id,
+      student: student2._id,
+      course: course10._id,
+      submissionFiles: [
+        {
+          name: 'amina_python_eda_analysis.ipynb',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '1.9 MB',
+        },
+      ],
+      studentNotes: 'Performed end-to-end EDA on 100k row sales dataset, handled missing values, and built executive visualization report.',
+      marksAwarded: 90,
+      status: 'graded',
+      feedback: 'Clean data transformation pipeline with Pandas and insightful correlation heatmaps in Seaborn.',
+      gradedBy: instructor2._id,
+      gradedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+    });
+
+    // -------------------------------------------------------------
+    // STUDENT 3: CARLOS RUIZ (DevOps & Mobile Specialist)
+    // -------------------------------------------------------------
+    // Course 4 (DevOps & K8s)
+    await Enrollment.create({
+      student: student3._id,
+      course: course4._id,
+      status: 'active',
+      pricePaid: 1899,
+    });
+
+    await Progress.create({
+      student: student3._id,
+      course: course4._id,
+      completedLessons: [sec4_1._id],
+      lessonProgress: [],
+      percentCompleted: 100,
+      isCompleted: true,
+    });
+
+    await Submission.create({
+      assignment: assign4._id,
+      student: student3._id,
+      course: course4._id,
+      submissionFiles: [
+        {
+          name: 'carlos_docker_k8s_deploy.zip',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '1.2 MB',
+        },
+      ],
+      studentNotes: 'Created multi-stage Alpine Dockerfile, written YAML manifests for Deployment, Service, and Ingress with health checks.',
+      marksAwarded: 93,
+      status: 'graded',
+      feedback: 'Clean multi-stage Docker build under 42MB. Kubernetes manifests deployed with zero downtime rolling updates.',
+      gradedBy: instructor2._id,
+      gradedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+    });
+
+    // Course 7 (Figma UI/UX)
+    await Enrollment.create({
+      student: student3._id,
+      course: course7._id,
+      status: 'active',
+      pricePaid: 999,
+    });
+
+    await Progress.create({
+      student: student3._id,
+      course: course7._id,
+      completedLessons: [sec7_1._id],
+      lessonProgress: [],
+      percentCompleted: 85,
+      isCompleted: false,
+    });
+
+    await Submission.create({
+      assignment: assign7._id,
+      student: student3._id,
+      course: course7._id,
+      submissionFiles: [
+        {
+          name: 'carlos_figma_design_system.fig',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '3.6 MB',
+        },
+      ],
+      studentNotes: 'Designed design system with color variables, spacing tokens, and nested auto-layout card components.',
+      marksAwarded: 88,
+      status: 'graded',
+      feedback: 'Strong component auto-layout and typography scale. Variables could be organized into more modular collections.',
+      gradedBy: instructor2._id,
+      gradedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    });
+
+    // Course 8 (React Native)
+    await Enrollment.create({
+      student: student3._id,
+      course: course8._id,
+      status: 'active',
+      pricePaid: 1599,
+    });
+
+    await Progress.create({
+      student: student3._id,
+      course: course8._id,
+      completedLessons: [sec8_1._id],
+      lessonProgress: [],
+      percentCompleted: 95,
+      isCompleted: false,
+    });
+
+    await Submission.create({
+      assignment: assign8._id,
+      student: student3._id,
+      course: course8._id,
+      submissionFiles: [
+        {
+          name: 'carlos_expo_mobile_app.zip',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '4.1 MB',
+        },
+      ],
+      studentNotes: 'Built cross-platform app with Expo Router v3, Camera API integration, and SQLite persistence.',
+      marksAwarded: 94,
+      status: 'graded',
+      feedback: 'Expo Router navigation runs smooth at 60fps on both iOS and Android emulators. Hardware permissions handled gracefully.',
+      gradedBy: instructor1._id,
+      gradedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    });
+
+    // Course 11 (AWS Cloud) - Submitted / PENDING GRADING!
+    await Enrollment.create({
+      student: student3._id,
+      course: course11._id,
+      status: 'active',
+      pricePaid: 1799,
+    });
+
+    await Progress.create({
+      student: student3._id,
+      course: course11._id,
+      completedLessons: [sec11_1._id],
+      lessonProgress: [],
+      percentCompleted: 70,
+      isCompleted: false,
+    });
+
+    await Submission.create({
+      assignment: assign11._id,
+      student: student3._id,
+      course: course11._id,
+      submissionFiles: [
+        {
+          name: 'carlos_aws_vpc_alb_cloudformation.yaml',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          size: '150 KB',
+        },
+      ],
+      studentNotes: 'Finished the multi-AZ VPC CloudFormation template, ALB setup, and auto-scaling group. Ready for instructor evaluation.',
+      marksAwarded: null,
+      status: 'submitted',
+      submittedAt: new Date(Date.now() - 4 * 60 * 60 * 1000),
     });
 
     // Seed Reviews

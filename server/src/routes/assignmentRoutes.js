@@ -6,6 +6,7 @@ import {
   submitAssignment,
   getSubmissionsForAssignment,
   gradeSubmission,
+  getMyGrades,
 } from '../controllers/assignmentController.js';
 import { protect, authorize } from '../middleware/authMiddleware.js';
 import { validate } from '../middleware/validateRequest.js';
@@ -19,6 +20,7 @@ const router = express.Router();
 
 router.use(protect);
 
+router.get('/my/grades', getMyGrades);
 router.get('/courses/:courseId', getAssignmentsForCourse);
 router.get('/:id', getAssignmentById);
 router.post('/:id/submit', validate(submitAssignmentSchema), submitAssignment);

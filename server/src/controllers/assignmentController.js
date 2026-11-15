@@ -229,3 +229,105 @@ export const gradeSubmission = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getMyGrades = async (req, res, next) => {
+  try {
+    const submissions = await Submission.find({ student: req.user._id })
+      .populate('assignment', 'title totalMarks passingMarks deadline')
+      .populate('course', 'title thumbnail slug')
+      .populate('gradedBy', 'name email avatar')
+      .sort({ updatedAt: -1 });
+
+    const gradedSubmissions = submissions.filter((s) => s.status === 'graded');
+    let totalMarksAwarded = 0;
+    let totalPossibleMarks = 0;
+
+    const gradesList = gradedSubmissions.map((sub) => {
+      const awarded = sub.marksAwarded || 0;
+      const total = sub.assignment?.totalMarks || 100;
+      totalMarksAwarded += awarded;
+      totalPossibleMarks += total;
+      const pct = Math.round((awarded / total) * 100);
+
+      let letter = 'F';
+      let gradePoints = 0.0;
+      if (pct >= 95) {
+        letter = 'A+';
+        gradePoints = 4.0;
+      } else if (pct >= 90) {
+        letter = 'A';
+        gradePoints = 4.0;
+      } else if (pct >= 85) {
+        letter = 'A-';
+        gradePoints = 3.7;
+      } else if (pct >= 80) {
+        letter = 'B+';
+        gradePoints = 3.3;
+      } else if (pct >= 75) {
+        letter = 'B';
+        gradePoints = 3.0;
+      } else if (pct >= 70) {
+        letter = 'B-';
+        gradePoints = 2.7;
+      } else if (pct >= 60) {
+        letter = 'C';
+        gradePoints = 2.0;
+      }
+
+      return {
+        _id: sub._id,
+        assignmentId: sub.assignment?._id,
+        assignmentTitle: sub.assignment?.title,
+        courseId: sub.course?._id,
+        courseTitle: sub.course?.title,
+        courseThumbnail: sub.course?.thumbnail,
+        marksAwarded: awarded,
+        totalMarks: total,
+        percentage: pct,
+        letterGrade: letter,
+        gradePoints,
+        feedback: sub.feedback,
+        gradedAt: sub.gradedAt,
+        gradedBy: sub.gradedBy?.name || 'Course Instructor',
+        status: sub.status,
+      };
+    });
+
+    const averagePercentage =
+      totalPossibleMarks > 0
+        ? Math.round((totalMarksAwarded / totalPossibleMarks) * 100)
+        : 0;
+
+    let cumulativeGPA = 0.0;
+    let overallGrade = 'N/A';
+    if (gradesList.length > 0) {
+      const sumPoints = gradesList.reduce((acc, g) => acc + g.gradePoints, 0);
+      cumulativeGPA = Number((sumPoints / gradesList.length).toFixed(2));
+      if (averagePercentage >= 95) overallGrade = 'A+';
+      else if (averagePercentage >= 90) overallGrade = 'A';
+      else if (averagePercentage >= 85) overallGrade = 'A-';
+      else if (averagePercentage >= 80) overallGrade = 'B+';
+      else if (averagePercentage >= 75) overallGrade = 'B';
+      else if (averagePercentage >= 70) overallGrade = 'B-';
+      else overallGrade = 'C';
+    }
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        totalSubmissions: submissions.length,
+        gradedCount: gradedSubmissions.length,
+        pendingCount: submissions.filter((s) => s.status === 'submitted').length,
+        totalMarksAwarded,
+        totalPossibleMarks,
+        averagePercentage,
+        cumulativeGPA,
+        overallGrade,
+      },
+      grades: gradesList,
+      submissions,
+    });
+  } catch (err) {
+    next(err);
+  }
+};

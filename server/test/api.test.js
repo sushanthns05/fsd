@@ -115,4 +115,23 @@ describe('EduSphere Backend Integration Tests', () => {
     expect(verifyRes.body.isValid).toBe(true);
     expect(verifyRes.body.certificate.studentName).toBe('Liam Miller');
   });
+
+  it('GET /api/v1/assignments/my/grades should return student GPA, letter grades, and grade points', async () => {
+    const res = await request(app)
+      .get('/api/v1/assignments/my/grades')
+      .set('Authorization', `Bearer ${studentToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.stats).toBeDefined();
+    expect(res.body.stats.cumulativeGPA).toBeGreaterThanOrEqual(3.5);
+    expect(res.body.stats.overallGrade).toBe('A+');
+    expect(res.body.grades.length).toBeGreaterThanOrEqual(1);
+
+    const firstGrade = res.body.grades[0];
+    expect(firstGrade.letterGrade).toBeDefined();
+    expect(firstGrade.gradePoints).toBeGreaterThan(0);
+    expect(firstGrade.marksAwarded).toBeGreaterThan(0);
+    expect(firstGrade.totalMarks).toBe(100);
+  });
 });
